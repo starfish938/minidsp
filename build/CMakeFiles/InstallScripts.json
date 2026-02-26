@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/Magewell/Desktop/EE/miniDSP_library/build/cmake_install.cmake",
+		"C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/cmake_install.cmake",
+		"C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googlemock/cmake_install.cmake",
+		"C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googletest/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

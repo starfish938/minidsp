@@ -1,0 +1,38 @@
+[
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/Magewell/Desktop/EE/miniDSP_library -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock -g -std=gnu++17 -o CMakeFiles\\test_dsp_lib.dir\\gtest.cpp.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\gtest.cpp",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/gtest.cpp",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/CMakeFiles/test_dsp_lib.dir/gtest.cpp.obj"
+},
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/Magewell/Desktop/EE/miniDSP_library -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/include -g -std=gnu++17 -o CMakeFiles\\example.dir\\example.cpp.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\example.cpp",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/example.cpp",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/CMakeFiles/example.dir/example.cpp.obj"
+},
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/include -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest -g -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o googletest\\googlemock\\CMakeFiles\\gmock.dir\\src\\gmock-all.cc.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\googletest\\googlemock\\src\\gmock-all.cc",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/src/gmock-all.cc",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.obj"
+},
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest -g -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o googletest\\googlemock\\CMakeFiles\\gmock_main.dir\\src\\gmock_main.cc.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\googletest\\googlemock\\src\\gmock_main.cc",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googlemock/src/gmock_main.cc",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.obj"
+},
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -IC:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest -g -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o googletest\\googletest\\CMakeFiles\\gtest.dir\\src\\gtest-all.cc.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\googletest\\googletest\\src\\gtest-all.cc",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/src/gtest-all.cc",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.obj"
+},
+{
+  "directory": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build",
+  "command": "C:\\msys64\\mingw64\\bin\\g++.exe -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/include -isystem C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest -g -std=c++17 -Wall -Wshadow -Wundef -Wno-error=dangling-else -DGTEST_HAS_PTHREAD=0 -fexceptions -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -o googletest\\googletest\\CMakeFiles\\gtest_main.dir\\src\\gtest_main.cc.obj -c C:\\Users\\Magewell\\Desktop\\EE\\miniDSP_library\\googletest\\googletest\\src\\gtest_main.cc",
+  "file": "C:/Users/Magewell/Desktop/EE/miniDSP_library/googletest/googletest/src/gtest_main.cc",
+  "output": "C:/Users/Magewell/Desktop/EE/miniDSP_library/build/googletest/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.obj"
+}
+]
