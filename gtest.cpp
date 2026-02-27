@@ -61,15 +61,15 @@ TEST_F(FFTTest, SineWave) {
     auto spectrum = DSPLib<double>::fft(signal);
     
     // 应该在 k=1 和 k=7 处有峰值（共轭对称）
-    EXPECT_GT(std::abs(spectrum[1]), 3.0);  // 应该有较大的幅度
+    EXPECT_GT(std::abs(spectrum[1]), 3.0);  
     EXPECT_GT(std::abs(spectrum[7]), 3.0);
-    EXPECT_LT(std::abs(spectrum[0]), 0.1);  // DC 分量应该很小
-    EXPECT_LT(std::abs(spectrum[4]), 0.1);  // 其他频率应该很小
+    EXPECT_LT(std::abs(spectrum[0]), 0.1);  
+    EXPECT_LT(std::abs(spectrum[4]), 0.1);  
 }
 
 // 测试非 2 的幂输入
 TEST_F(FFTTest, NonPowerOfTwo) {
-    std::vector<Complex> signal = {{1,0}, {2,0}, {3,0}};  // 长度 3
+    std::vector<Complex> signal = {{1,0}, {2,0}, {3,0}};  
     
     EXPECT_THROW(DSPLib<double>::fft(signal), std::invalid_argument);
 }
@@ -111,7 +111,7 @@ TEST_F(ConvolutionTest, Commutative) {
 // 测试卷积的单位元
 TEST_F(ConvolutionTest, Identity) {
     std::vector<double> a = {1, 2, 3, 4, 5};
-    std::vector<double> impulse = {1};  // 单位脉冲
+    std::vector<double> impulse = {1};  
     
     auto result = DSPLib<double>::convolve(a, impulse);
     
@@ -147,7 +147,7 @@ TEST_F(WindowFunctionTest, HammingSymmetry) {
     EXPECT_NEAR(window[N/2], 1.0, epsilon);  // 中心应为 1
 }
 
-// 测试汉宁窗
+// 测试汉明窗
 TEST_F(WindowFunctionTest, HannSymmetry) {
     size_t N = 11;
     auto window = DSPLib<double>::window_hann(N);
@@ -182,7 +182,7 @@ TEST_F(FIRFilterTest, ImpulseResponse) {
         EXPECT_NEAR(response[i], coeff[i], epsilon);
     }
     
-    // 之后的响应应该为 0
+    
     for (size_t i = coeff.size(); i < response.size(); i++) {
         EXPECT_NEAR(response[i], 0.0, epsilon);
     }
@@ -206,11 +206,11 @@ TEST_F(FIRFilterTest, FrequencySelectivity) {
     }
     
     auto output = filter.process(input);
-    size_t start = 200;  // 跳过瞬态
+    size_t start = 200;  
     
     // 计算输出功率（简单近似）
     double low_amp = 0, high_amp = 0;
-    for (size_t i = 20; i < N; i++) {  // 跳过瞬态
+    for (size_t i = 20; i < N; i++) {  
         low_amp = std::max(low_amp, std::abs(output[i]));
         high_amp = std::max(high_amp, std::abs(output[i]));
     }
@@ -221,22 +221,23 @@ TEST_F(FIRFilterTest, FrequencySelectivity) {
 }
 
 // ==================== IIR 滤波器测试 ====================
-class IIRFilterTest : public ::testing::Test {
+//低通一阶
+class IIRLPFilterTest : public ::testing::Test {
 protected:
     const double epsilon = 1e-6;
+    const double pi = 3.14159265358979323846;
 };
 
-// 测试 IIR 滤波器的稳定性
-TEST_F(IIRFilterTest, Stability) {
+// 稳定性
+TEST_F(IIRLPFilterTest, FirstorderStability) {
     auto [b, a] = DSPLib<double>::design_lowpass_iir(0.2);
     
     // 检查极点是否在单位圆内（简单检查 a 系数）
-    // 对于二阶滤波器，稳定的必要条件是 |a2| < 1
     EXPECT_LT(std::abs(a[1]), 1.0);
 }
 
-// 测试 IIR 滤波器的脉冲响应（应该衰减到0）
-TEST_F(IIRFilterTest, ImpulseDecay) {
+// 脉冲响应衰减
+TEST_F(IIRLPFilterTest, FirstorderImpulseDecay) {
     auto [b, a] = DSPLib<double>::design_lowpass_iir(0.2);
     DSPLib<double>::IIRFilter filter(b, a);
     
@@ -259,15 +260,93 @@ TEST_F(IIRFilterTest, ImpulseDecay) {
     
     // 检查是否稳定（不发散）
     for (size_t i = 1; i < response.size(); i++) {
-        if (std::abs(response[i]) > 1e-6) {  // 忽略数值噪声
+        if (std::abs(response[i]) > 1e-6) {  
             EXPECT_LE(std::abs(response[i]), std::abs(response[i-1]) * 2.0);
         }
     }
 }
 
-// 测试 IIR 高通滤波器的稳定性
-TEST_F(IIRFilterTest, HighpassStability) {
-    auto [b, a] = DSPLib<double>::design_highpass_iir(0.2);  // 假设有高通设计函数
+//低通二阶
+//稳定性
+TEST_F(IIRLPFilterTest, SecondorderStability){
+    auto [b, a] = DSPLib<double>::design_lowpass_iir_2nd(0.2);
+    
+    EXPECT_LT(std::abs(a[1]), 1.0);
+    EXPECT_LT(std::abs(a[2]), 1.0);
+}
+
+//脉冲响应衰减
+TEST_F(IIRLPFilterTest, SecondorderImpulseDecay){
+    auto [b, a] = DSPLib<double>::design_lowpass_iir_2nd(0.2);
+    DSPLib<double>::IIRFilter filter(b, a);
+    
+    std::vector<double> impulse(200, 0);
+    impulse[0] = 1.0;
+    auto response = filter.process(impulse);
+    
+    double start_energy = 0, end_energy = 0;
+    for (size_t i = 0; i < 20; i++) start_energy += std::abs(response[i]);
+    for (size_t i = 180; i < 200; i++) end_energy += std::abs(response[i]);
+    
+    EXPECT_LT(end_energy, start_energy * 0.1);
+}
+
+//直流增益
+TEST_F(IIRLPFilterTest, SecondorderDCResponse){
+    auto [b, a] = DSPLib<double>::design_lowpass_iir_2nd(0.2);
+    DSPLib<double>::IIRFilter filter(b, a);
+    
+    std::vector<double> dc_input(100, 1.0);
+    auto output = filter.process(dc_input);
+    
+    double steady = 0;
+    for (size_t i = 80; i < 100; i++) steady += std::abs(output[i]);
+    steady /= 20;
+    
+    EXPECT_NEAR(steady, 1.0, 0.1);  // 直流增益应为1
+}
+
+//频率选择性
+TEST_F(IIRLPFilterTest, SecondorderFrequencySelectivity){
+    double cutoff = 0.2;
+    auto [b, a] = DSPLib<double>::design_lowpass_iir_2nd(cutoff);
+    DSPLib<double>::IIRFilter filter(b, a);
+    
+    const size_t N = 500;
+    std::vector<double> input(N);
+    
+    // 测试低频 (应通过)
+    for (size_t i = 0; i < N; i++) 
+        input[i] = std::sin(2.0 * pi * 0.05 * i);
+    auto low_out = filter.process(input);
+    
+    filter.reset();
+    
+    // 测试高频 (应衰减)
+    for (size_t i = 0; i < N; i++) 
+        input[i] = std::sin(2.0 * pi * 0.4 * i);
+    auto high_out = filter.process(input);
+    
+    double low_amp = 0, high_amp = 0;
+    for (size_t i = 400; i < N; i++) {
+        low_amp = std::max(low_amp, std::abs(low_out[i]));
+        high_amp = std::max(high_amp, std::abs(high_out[i]));
+    }
+    
+    EXPECT_GT(low_amp, 0.8);   // 低频保留
+    EXPECT_LT(high_amp, 0.3);  // 高频衰减
+}
+
+//高通一阶
+class IIRHPFilterTest : public ::testing::Test {
+    protected:
+        const double epsilon = 1e-6;
+        const double pi = 3.14159265358979323846;
+};
+
+//稳定性
+TEST_F(IIRHPFilterTest, HighpassStability) {
+    auto [b, a] = DSPLib<double>::design_highpass_iir(0.2); 
     
     // 检查极点是否在单位圆内
     EXPECT_LT(std::abs(a[1]), 1.0);
@@ -276,8 +355,9 @@ TEST_F(IIRFilterTest, HighpassStability) {
     }
 }
 
-// 测试 IIR 高通滤波器的脉冲响应（应该衰减到0）
-TEST_F(IIRFilterTest, HighpassImpulseDecay) {
+// 脉冲响应衰减
+TEST_F(IIRHPFilterTest, HighpassImpulseDecay) {
+    
     auto [b, a] = DSPLib<double>::design_highpass_iir(0.2);
     DSPLib<double>::IIRFilter filter(b, a);
     
@@ -305,8 +385,8 @@ TEST_F(IIRFilterTest, HighpassImpulseDecay) {
     }
 }
 
-// 测试 IIR 高通滤波器的直流响应
-TEST_F(IIRFilterTest, HighpassDCResponse) {
+// 直流响应
+TEST_F(IIRHPFilterTest, HighpassDCResponse) {
     auto [b, a] = DSPLib<double>::design_highpass_iir(0.2);
     DSPLib<double>::IIRFilter filter(b, a);
     
@@ -342,7 +422,7 @@ TEST_F(IIRFilterDirectIITest, ConstructorInitialization) {
     
     DSPLib<double>::IIRFilterDirectII filter(b, a);
     
-    // 无法直接访问内部状态，只能通过处理信号验证
+    
     SUCCEED();
 }
 
@@ -368,7 +448,7 @@ TEST_F(IIRFilterDirectIITest, ImpulseResponse) {
         std::cout << response[i] << " ";
     }
     std::cout << std::endl;
-    // 验证前几个点
+    // 验证
     for (size_t i = 0; i < 10; i++) {
         EXPECT_NEAR(response[i], expected[i], epsilon);
     }
@@ -379,12 +459,12 @@ TEST_F(IIRFilterDirectIITest, StepResponse) {
     auto [b, a] = createLowpassFilter();
     DSPLib<double>::IIRFilterDirectII filter(b, a);
     
-    std::vector<double> step(100, 1.0);  // 全1信号
+    std::vector<double> step(100, 1.0);  
     
     auto response = filter.process(step);
     
-    // 计算理论稳态值 = sum(b) / (1 + sum(a除a0外))
-    double dc_gain = (b[0] + b[1]) / (1 + a[1]);  // a0=1已归一化
+    
+    double dc_gain = (b[0] + b[1]) / (1 + a[1]);  
     
     // 稳态应该接近直流增益
     for (size_t i = 80; i < 100; i++) {
@@ -408,7 +488,7 @@ TEST_F(IIRFilterDirectIITest, SineWaveResponse) {
     
     auto output = filter.process(input);
     
-    // 稳态后，输出应该是同频率的正弦波，幅度衰减
+    
     size_t start = 100;
     double input_amp = 0, output_amp = 0;
     
@@ -417,19 +497,19 @@ TEST_F(IIRFilterDirectIITest, SineWaveResponse) {
         output_amp = std::max(output_amp, std::abs(output[i]));
     }
     
-    // 输出幅度应该小于输入（低通衰减）
+    // 输出幅度应该小于输入
     EXPECT_LT(output_amp, input_amp);
-    EXPECT_GT(output_amp, 0.1);  // 但不会完全消失
+    EXPECT_GT(output_amp, 0.1);  
 }
 
 // 测试5: 与直接I型的一致性
 TEST_F(IIRFilterDirectIITest, CompareWithDirectI) {
     auto [b, a] = createLowpassFilter();
     
-    // 直接I型滤波器
+    
     DSPLib<double>::IIRFilter filter_directI(b, a);
     
-    // 直接II型滤波器
+    
     DSPLib<double>::IIRFilterDirectII filter_directII(b, a);
     
     std::vector<double> input(100);
@@ -441,7 +521,7 @@ TEST_F(IIRFilterDirectIITest, CompareWithDirectI) {
     auto outputI = filter_directI.process(input);
     auto outputII = filter_directII.process(input);
     
-    // 两种实现应该输出相同（允许微小误差）
+    
     for (size_t i = 0; i < outputI.size(); i++) {
         EXPECT_NEAR(outputI[i], outputII[i], 1e-10);
     }
@@ -496,12 +576,11 @@ TEST_F(IIRFilterDirectIITest, BatchVsSampleWise) {
     }
 }
 
-// 测试8: 稳定性测试（极点必须在单位圆内）
+// 测试8: 稳定性测试
 TEST_F(IIRFilterDirectIITest, Stability) {
-    // 测试不稳定的滤波器应该表现为发散
-    std::vector<double> b = {1.0, 0.5};
-    std::vector<double> a = {1.0, -1.5};  // 极点 z=1.5 > 1，不稳定
     
+    std::vector<double> b = {1.0, 0.5};
+    std::vector<double> a = {1.0, -1.5};  
     DSPLib<double>::IIRFilterDirectII filter(b, a);
     
     std::vector<double> impulse(50, 0);
@@ -509,7 +588,7 @@ TEST_F(IIRFilterDirectIITest, Stability) {
     
     auto response = filter.process(impulse);
     
-    // 不稳定滤波器应该发散（幅度增长）
+    
     bool diverging = false;
     for (size_t i = 10; i < response.size(); i++) {
         if (std::abs(response[i]) > std::abs(response[i-1]) * 1.5) {
@@ -572,7 +651,7 @@ TEST_F(STFTTest, ChirpSignal) {
         peak_bins.push_back(peak_bin);
     }
     
-    // 峰值频率应该大致随时间增加（可能由于分辨率限制有波动）
+    
     // 这里只检查总体趋势
     size_t increasing_count = 0;
     for (size_t i = 1; i < peak_bins.size(); i++) {
@@ -615,7 +694,7 @@ TEST_F(BenchmarkTest, FFTPerformance) {
     }
 }
 
-// ==================== 主函数 ====================
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

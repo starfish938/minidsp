@@ -407,6 +407,34 @@ public:
         return {b, a};
     }
     
+    static std::pair<std::vector<T>, std::vector<T>> design_lowpass_iir_2nd(T cutoff) {
+        T pi = 3.14159265358979323846;
+        T wc = 2.0 * pi * cutoff;  // 数字角频率
+        
+        // 预畸变
+        T Ωc = std::tan(wc / 2.0);
+        
+        // 二阶巴特沃斯参数 (ζ = 0.7071)
+        T c = Ωc * Ωc;
+        T d = 2.0 * Ωc * 0.707106781;  // √2/2
+        
+        // 归一化因子
+        T norm = 1.0 / (1.0 + d + c);
+        
+        std::vector<T> b(3), a(3);
+        
+        // 分子系数
+        b[0] = c * norm;
+        b[1] = 2.0 * c * norm;
+        b[2] = c * norm;
+        
+        // 分母系数
+        a[0] = 1.0;
+        a[1] = 2.0 * (c - 1.0) * norm;
+        a[2] = (1.0 - d + c) * norm;
+        
+        return {b, a};
+}
     
     // ==================== 短时傅里叶变换 ====================
     struct STFTResult {
